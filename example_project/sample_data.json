@@ -1,0 +1,77 @@
+[
+  {
+    "model": "blog.post",
+    "pk": 1,
+    "fields": {
+      "title": "Welcome to Django-Jodit!",
+      "slug": "welcome-to-django-jodit",
+      "content": "<h2>What is Django-Jodit?</h2><p>Django-Jodit is a powerful integration of the <strong>Jodit WYSIWYG editor</strong> with Django. It provides an intuitive rich text editing experience for your Django applications.</p><h3>Key Features</h3><ul><li>🎨 <strong>Full-featured WYSIWYG editor</strong> - Format text, add images, create tables, and more</li><li>📝 <strong>Easy integration</strong> - Works seamlessly with Django forms and admin</li><li>⚙️ <strong>Highly configurable</strong> - Customize the editor to match your needs</li><li>🎯 <strong>Multiple configurations</strong> - Use different editor setups for different fields</li></ul><h3>How It Works</h3><p>This blog post was created using the <em>default</em> Jodit configuration, which includes all editor features. The excerpt below uses a <em>simple</em> configuration with basic formatting only.</p><blockquote><p>\"The best WYSIWYG editor for Django applications!\"</p></blockquote><h3>Getting Started</h3><ol><li>Install django-jodit: <code>pip install django-jodit</code></li><li>Add 'jodit' to your INSTALLED_APPS</li><li>Use RichTextField in your models</li><li>Enjoy rich text editing!</li></ol><p>Check out the <a href=\"https://github.com/mounirmesselmeni/django-jodit\">GitHub repository</a> for more information.</p>",
+      "excerpt": "<p>Learn how to use Django-Jodit to add <strong>rich text editing</strong> capabilities to your Django applications with the powerful Jodit editor.</p>",
+      "author": "Django-Jodit Team",
+      "created_at": "2024-01-15T10:00:00Z",
+      "updated_at": "2024-01-15T10:00:00Z",
+      "published": true
+    }
+  },
+  {
+    "model": "blog.post",
+    "pk": 2,
+    "fields": {
+      "title": "Rich Text Formatting Examples",
+      "slug": "rich-text-formatting-examples",
+      "content": "<h2>Text Formatting</h2><p>The Jodit editor supports various text formatting options:</p><ul><li><strong>Bold text</strong> for emphasis</li><li><em>Italic text</em> for quotes or titles</li><li><u>Underlined text</u> for highlighting</li><li><s>Strikethrough text</s> for corrections</li></ul><h2>Lists</h2><h3>Ordered List</h3><ol><li>First item</li><li>Second item</li><li>Third item</li></ol><h3>Unordered List</h3><ul><li>Bullet point one</li><li>Bullet point two</li><li>Bullet point three</li></ul><h2>Links and Code</h2><p>You can easily add <a href=\"https://xdsoft.net/jodit/\">hyperlinks</a> to your content.</p><p>Inline code: <code>print('Hello, Django-Jodit!')</code></p><h2>Tables</h2><table style=\"width: 100%;\"><thead><tr><th>Feature</th><th>Status</th><th>Description</th></tr></thead><tbody><tr><td>Rich Text</td><td>✅ Available</td><td>Full WYSIWYG editing</td></tr><tr><td>Images</td><td>✅ Available</td><td>Base64 embedded images</td></tr><tr><td>Tables</td><td>✅ Available</td><td>Create and edit tables</td></tr></tbody></table><h2>Quotes</h2><blockquote><p>Django-Jodit makes rich text editing in Django projects incredibly easy and powerful.</p></blockquote>",
+      "excerpt": "<p>Explore the various <strong>text formatting options</strong> available in the Jodit editor, including lists, tables, links, and more.</p>",
+      "author": "Admin",
+      "created_at": "2024-01-16T14:30:00Z",
+      "updated_at": "2024-01-16T14:30:00Z",
+      "published": true
+    }
+  },
+  {
+    "model": "blog.post",
+    "pk": 3,
+    "fields": {
+      "title": "Configuration Examples",
+      "slug": "configuration-examples",
+      "content": "<h2>Customizing the Editor</h2><p>Django-Jodit allows you to create multiple editor configurations for different use cases.</p><h3>Default Configuration</h3><p>This post uses the <strong>default</strong> configuration with all features enabled:</p><ul><li>Full toolbar with all buttons</li><li>400px height</li><li>Character and word counter</li><li>Spell checker</li><li>Image upload support</li></ul><h3>Simple Configuration</h3><p>For comments or short excerpts, you might want a simpler editor with just basic formatting:</p><ul><li>Limited toolbar (bold, italic, underline, link)</li><li>200px height</li><li>No counters or extra features</li></ul><h3>Custom Configuration</h3><p>You can create your own configurations in <code>settings.py</code>:</p><pre><code>JODIT_CONFIGS = {\n    'my_custom': {\n        'height': 300,\n        'buttons': ['bold', 'italic', 'link', 'image'],\n        'showCharsCounter': False,\n    }\n}</code></pre><h3>Using Configurations</h3><p>Apply configurations to your fields:</p><pre><code>class Post(models.Model):\n    # Full editor\n    content = RichTextField()\n    \n    # Simple editor\n    excerpt = RichTextField(config_name='simple')\n    \n    # Custom editor\n    notes = RichTextField(config_name='my_custom')</code></pre><h2>Try It Yourself</h2><p>Edit this post in the admin panel or create a new one to see the different configurations in action!</p>",
+      "excerpt": "<p>Learn how to <strong>customize</strong> the Jodit editor with different configurations for various use cases.</p>",
+      "author": "Admin",
+      "created_at": "2024-01-17T09:15:00Z",
+      "updated_at": "2024-01-17T09:15:00Z",
+      "published": true
+    }
+  },
+  {
+    "model": "blog.comment",
+    "pk": 1,
+    "fields": {
+      "post": 1,
+      "author": "John Doe",
+      "content": "<p>This is <strong>amazing</strong>! The editor works perfectly with Django. 🎉</p>",
+      "created_at": "2024-01-15T12:00:00Z",
+      "approved": true
+    }
+  },
+  {
+    "model": "blog.comment",
+    "pk": 2,
+    "fields": {
+      "post": 1,
+      "author": "Jane Smith",
+      "content": "<p>I love how easy it is to <em>format text</em> with this editor. The <a href=\"#\">link support</a> is great too!</p>",
+      "created_at": "2024-01-15T15:30:00Z",
+      "approved": true
+    }
+  },
+  {
+    "model": "blog.comment",
+    "pk": 3,
+    "fields": {
+      "post": 2,
+      "author": "Developer",
+      "content": "<p>The <strong>table support</strong> is exactly what I needed for my Django project!</p>",
+      "created_at": "2024-01-16T16:00:00Z",
+      "approved": true
+    }
+  }
+]

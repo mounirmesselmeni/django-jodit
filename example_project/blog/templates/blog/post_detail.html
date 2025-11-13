@@ -1,0 +1,112 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ post.title }} - Django Jodit Example{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <!-- Back button -->
+        <a href="{% url 'post_list' %}" class="btn btn-outline-secondary mb-3">
+            ← Back to Posts
+        </a>
+
+        <!-- Post -->
+        <article class="card shadow-sm">
+            <div class="card-body">
+                <h1 class="card-title">{{ post.title }}</h1>
+                
+                <div class="text-muted mb-4">
+                    <small>
+                        By <strong>{{ post.author }}</strong> | 
+                        Published on {{ post.created_at|date:"F d, Y" }}
+                        {% if post.updated_at != post.created_at %}
+                        | Updated {{ post.updated_at|date:"F d, Y" }}
+                        {% endif %}
+                    </small>
+                </div>
+
+                {% if post.excerpt %}
+                <div class="post-excerpt">
+                    <strong>Summary:</strong>
+                    {{ post.excerpt|safe }}
+                </div>
+                {% endif %}
+
+                <div class="post-content">
+                    {{ post.content|safe }}
+                </div>
+
+                <hr class="my-4">
+
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'post_edit' post.slug %}" class="btn btn-outline-primary">
+                        Edit Post
+                    </a>
+                    <span class="text-muted">{{ post.comments.count }} comment{{ post.comments.count|pluralize }}</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Comments Section -->
+        <div class="mt-5">
+            <h3>Comments</h3>
+            
+            {% if comments %}
+                {% for comment in comments %}
+                <div class="comment card mb-3">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            {{ comment.author }} - {{ comment.created_at|date:"F d, Y g:i A" }}
+                        </h6>
+                        <div>{{ comment.content|safe }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">No comments yet. Be the first to comment!</p>
+            {% endif %}
+
+            <!-- Add Comment Form -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">Add a Comment</h5>
+                    <form method="post" action="{% url 'add_comment' post.slug %}">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            {{ comment_form.author.label_tag }}
+                            {{ comment_form.author }}
+                            {% if comment_form.author.errors %}
+                                <div class="text-danger">{{ comment_form.author.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ comment_form.content.label_tag }}
+                            {{ comment_form.content }}
+                            {% if comment_form.content.errors %}
+                                <div class="text-danger">{{ comment_form.content.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                Use the editor to format your comment
+                            </small>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Post Comment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+{{ block.super }}
+{{ comment_form.media.css }}
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+{{ comment_form.media.js }}
+{% endblock %}
+{% endblock %}

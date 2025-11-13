@@ -1,0 +1,82 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Blog Posts - Django Jodit Example{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Blog Posts</h1>
+            <a href="{% url 'post_create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> New Post
+            </a>
+        </div>
+
+        {% if posts %}
+            {% for post in posts %}
+            <article class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <a href="{% url 'post_detail' post.slug %}" class="text-decoration-none">
+                            {{ post.title }}
+                        </a>
+                    </h2>
+                    
+                    <div class="text-muted mb-3">
+                        <small>
+                            By {{ post.author }} | 
+                            {{ post.created_at|date:"F d, Y" }} |
+                            {{ post.comments.count }} comment{{ post.comments.count|pluralize }}
+                        </small>
+                    </div>
+
+                    {% if post.excerpt %}
+                    <div class="post-excerpt">
+                        {{ post.excerpt|safe }}
+                    </div>
+                    {% endif %}
+
+                    <a href="{% url 'post_detail' post.slug %}" class="btn btn-outline-primary btn-sm">
+                        Read More →
+                    </a>
+                    <a href="{% url 'post_edit' post.slug %}" class="btn btn-outline-secondary btn-sm">
+                        Edit
+                    </a>
+                </div>
+            </article>
+            {% endfor %}
+
+            <!-- Pagination -->
+            {% if is_paginated %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-info">
+                <h4>No posts yet!</h4>
+                <p>Start by creating your first blog post.</p>
+                <a href="{% url 'post_create' %}" class="btn btn-primary">Create Your First Post</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

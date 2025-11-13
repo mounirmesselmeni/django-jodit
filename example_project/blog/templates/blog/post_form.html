@@ -1,0 +1,174 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{% if form.instance.pk %}Edit{% else %}Create{% endif %} Post - Django Jodit Example{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <h1 class="mb-4">{% if form.instance.pk %}Edit{% else %}Create New{% endif %} Post</h1>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label for="{{ form.title.id_for_label }}" class="form-label">
+                            {{ form.title.label }}
+                            {% if form.title.field.required %}<span class="text-danger">*</span>{% endif %}
+                        </label>
+                        {{ form.title }}
+                        {% if form.title.help_text %}
+                            <div class="form-text">{{ form.title.help_text }}</div>
+                        {% endif %}
+                        {% if form.title.errors %}
+                            <div class="text-danger">{{ form.title.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.slug.id_for_label }}" class="form-label">
+                            {{ form.slug.label }}
+                            {% if form.slug.field.required %}<span class="text-danger">*</span>{% endif %}
+                        </label>
+                        {{ form.slug }}
+                        {% if form.slug.help_text %}
+                            <div class="form-text">{{ form.slug.help_text }}</div>
+                        {% endif %}
+                        {% if form.slug.errors %}
+                            <div class="text-danger">{{ form.slug.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.author.id_for_label }}" class="form-label">
+                            {{ form.author.label }}
+                            {% if form.author.field.required %}<span class="text-danger">*</span>{% endif %}
+                        </label>
+                        {{ form.author }}
+                        {% if form.author.help_text %}
+                            <div class="form-text">{{ form.author.help_text }}</div>
+                        {% endif %}
+                        {% if form.author.errors %}
+                            <div class="text-danger">{{ form.author.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.content.id_for_label }}" class="form-label">
+                            {{ form.content.label }}
+                            {% if form.content.field.required %}<span class="text-danger">*</span>{% endif %}
+                        </label>
+                        {{ form.content }}
+                        {% if form.content.help_text %}
+                            <div class="form-text">{{ form.content.help_text }}</div>
+                        {% endif %}
+                        {% if form.content.errors %}
+                            <div class="text-danger">{{ form.content.errors }}</div>
+                        {% endif %}
+                        <div class="form-text">
+                            <strong>Full-featured editor</strong> - Use the toolbar above for rich text formatting, 
+                            including images, tables, links, and more.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.excerpt.id_for_label }}" class="form-label">
+                            {{ form.excerpt.label }}
+                            {% if form.excerpt.field.required %}<span class="text-danger">*</span>{% endif %}
+                        </label>
+                        {{ form.excerpt }}
+                        {% if form.excerpt.help_text %}
+                            <div class="form-text">{{ form.excerpt.help_text }}</div>
+                        {% endif %}
+                        {% if form.excerpt.errors %}
+                            <div class="text-danger">{{ form.excerpt.errors }}</div>
+                        {% endif %}
+                        <div class="form-text">
+                            <strong>Simple editor</strong> - Basic formatting only (bold, italic, lists, links).
+                        </div>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        {{ form.published }}
+                        <label class="form-check-label" for="{{ form.published.id_for_label }}">
+                            {{ form.published.label }}
+                        </label>
+                        {% if form.published.errors %}
+                            <div class="text-danger">{{ form.published.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'post_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">
+                            {% if form.instance.pk %}Update Post{% else %}Create Post{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="alert alert-info mt-4">
+            <h5>💡 Tips for using the Jodit Editor:</h5>
+            <ul class="mb-0">
+                <li><strong>Content field</strong>: Full-featured editor with all toolbar buttons</li>
+                <li><strong>Excerpt field</strong>: Simplified editor with basic formatting only</li>
+                <li>You can paste content from Word or other editors</li>
+                <li>Images can be inserted as base64 (embedded in the HTML)</li>
+                <li>Use the "Source" button to view/edit HTML directly</li>
+                <li>The editor automatically saves your formatting</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+{{ block.super }}
+{{ form.media.css }}
+<style>
+    .jodit-container {
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+{{ form.media.js }}
+<script>
+    // Auto-generate slug from title
+    document.addEventListener('DOMContentLoaded', function() {
+        const titleInput = document.getElementById('{{ form.title.id_for_label }}');
+        const slugInput = document.getElementById('{{ form.slug.id_for_label }}');
+        
+        if (titleInput && slugInput) {
+            titleInput.addEventListener('input', function() {
+                // Only auto-generate if slug is empty or was auto-generated
+                if (!slugInput.dataset.manuallyEdited) {
+                    const slug = this.value
+                        .toLowerCase()
+                        .replace(/[^\w\s-]/g, '')
+                        .replace(/[\s_-]+/g, '-')
+                        .replace(/^-+|-+$/g, '');
+                    slugInput.value = slug;
+                }
+            });
+            
+            slugInput.addEventListener('input', function() {
+                // Mark as manually edited if user types in slug field
+                this.dataset.manuallyEdited = 'true';
+            });
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}

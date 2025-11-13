@@ -1,0 +1,9 @@
+include LICENSE
+include README.md
+recursive-include jodit/static *
+recursive-include jodit/templates *
+recursive-exclude jodit *.pyc
+recursive-exclude jodit *.pyo
+recursive-exclude jodit __pycache__
+exclude jodit/tests.py
+exclude jodit/testsettings.py

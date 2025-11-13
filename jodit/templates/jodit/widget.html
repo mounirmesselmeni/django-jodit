@@ -1,0 +1,4 @@
+{% load static %}
+<div class="django-jodit-widget" data-field-id="{{ widget.attrs.id }}" style="display: inline-block; width: 100%;">
+    <textarea name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %} data-jodit-config="{{ widget.config }}" data-processed="0">{% if widget.value %}{{ widget.value }}{% endif %}</textarea>
+</div>

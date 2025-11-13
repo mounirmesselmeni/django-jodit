@@ -1,0 +1,135 @@
+[project]
+name = "django-jodit"
+version = "0.1.0"
+description = "A Django app to integrate Jodit WYSIWYG editor with support for admin and forms"
+readme = "README.md"
+authors = [
+    { name = "Mounir Messelmeni", email = "messelmeni.mounir@gmail.com" },
+]
+requires-python = ">=3.10"
+license = "MIT"
+keywords = ["django", "jodit", "wysiwyg", "editor", "rich text", "html editor"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Framework :: Django :: 5.2",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = ["Django>=4.2"]
+
+[project.urls]
+Homepage = "https://github.com/mounirmesselmeni/django-jodit"
+Repository = "https://github.com/mounirmesselmeni/django-jodit"
+
+[dependency-groups]
+dev = ["coverage>=7,<8", "pre-commit>=3,<5", "ruff>=0.13,<0.15"]
+
+[tool.hatch.build.targets.sdist]
+include = ["jodit"]
+exclude = ["jodit/tests.py", "jodit/testsettings.py"]
+
+[tool.hatch.build.targets.wheel]
+include = ["jodit"]
+exclude = ["jodit/tests.py", "jodit/testsettings.py"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".pre-commit-cache",
+    ".ruff_cache",
+    ".tox",
+    ".venv",
+    "venv",
+    "docs",
+    "__pycache__",
+    "**/migrations/*",
+]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.format]
+quote-style = "preserve"
+
+[tool.ruff.lint]
+select = [
+    "F",
+    "E",
+    "B",
+    "C4",
+    "EXE",
+    "ISC",
+    "ICN",
+    "INP",
+    "PIE",
+    "SIM",
+    "W",
+    "T20",
+    "UP",
+    "T10",
+    "G",
+    "DJ001",
+    "DJ008",
+    "C90",
+    "ERA",
+]
+ignore = ["B008", "SIM102", "ISC001"]
+
+fixable = ["ALL"]
+unfixable = []
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.coverage.run]
+omit = [
+    "*/migrations/*",
+    "*/tests/*",
+    "*/tests.py",
+    "*test_*",
+    "*/wsgi.py",
+    "*/asgi.py",
+    "*factories.py",
+    "manage.py",
+    "*site-packages*",
+]
+source = ["."]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+    "def __repr__",
+    "def __str__",
+]
+omit = [
+    "*/migrations/*",
+    "*/tests/*",
+    "*/tests.py",
+    "*test_*",
+    "*/wsgi.py",
+    "*/asgi.py",
+    "*factories.py",
+    "manage.py",
+    "*site-packages*",
+    "*/management/commands/*",
+]

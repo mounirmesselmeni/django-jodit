@@ -1,0 +1,141 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    name: Python ${{ matrix.python-version }} / Django ${{ matrix.django-version }}
+    runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11', '3.12', '3.13']
+        django-version: ['4.2', '5.0', '5.1', '5.2']
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        enable-cache: true
+        cache-dependency-glob: "uv.lock"
+    
+    - name: Install dependencies
+      run: |
+        uv pip install --system "Django~=${{ matrix.django-version }}.0"
+        uv pip install --system coverage
+    
+    - name: Cache pre-commit hooks
+      if: matrix.python-version == '3.13' && matrix.django-version == '5.2'
+      id: pre-commit-cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pre-commit
+        key: ${{ runner.os }}-${{ matrix.python-version }}-pre-commit-hooks-${{ hashFiles('**/.pre-commit-config.yaml') }}
+    
+    - name: Install pre-commit
+      if: matrix.python-version == '3.13' && matrix.django-version == '5.2'
+      run: |
+        uv pip install --system pre-commit
+    
+    - name: Run pre-commit
+      if: matrix.python-version == '3.13' && matrix.django-version == '5.2'
+      run: |
+        pre-commit run --all-files
+      env:
+        PRE_COMMIT_HOME: ~/.cache/pre-commit
+    
+    - name: Run tests with coverage
+      run: |
+        coverage run --source='jodit' manage.py test jodit
+        coverage report
+        coverage xml
+    
+    - name: Publish coverage
+      if: matrix.python-version == '3.13' && matrix.django-version == '5.2'
+      uses: orgoro/coverage@v3.2
+      with:
+        coverageFile: coverage.xml
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Upload coverage to Codecov
+      if: matrix.python-version == '3.13' && matrix.django-version == '5.2'
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: Python ${{ matrix.python-version }} / Django ${{ matrix.django-version }}
+        fail_ci_if_error: false
+    
+    - name: Minimize uv cache
+      run: uv cache prune --ci
+
+  lint:
+    name: Code Quality (Ruff)
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        python-version: '3.13'
+        enable-cache: true
+    
+    - name: Install dependencies
+      run: |
+        uv pip install --system ruff
+    
+    - name: Run ruff check
+      run: ruff check .
+    
+    - name: Run ruff format check
+      run: ruff format --check .
+    
+    - name: Minimize uv cache
+      run: uv cache prune --ci
+
+  build:
+    name: Build Package
+    runs-on: ubuntu-latest
+    needs: [test, lint]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        python-version: '3.13'
+        enable-cache: true
+    
+    - name: Install build dependencies
+      run: uv pip install --system hatchling
+    
+    - name: Build package
+      run: uv build
+    
+    - name: Check package
+      run: |
+        uv pip install --system twine
+        twine check dist/*
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: distributions
+        path: dist/
+    
+    - name: Minimize uv cache
+      run: uv cache prune --ci
