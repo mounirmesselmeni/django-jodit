@@ -21,10 +21,10 @@
                             {{ post.title }}
                         </a>
                     </h2>
-                    
+
                     <div class="text-muted mb-3">
                         <small>
-                            By {{ post.author }} | 
+                            By {{ post.author }} |
                             {{ post.created_at|date:"F d, Y" }} |
                             {{ post.comments.count }} comment{{ post.comments.count|pluralize }}
                         </small>

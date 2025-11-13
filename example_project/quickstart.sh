@@ -20,11 +20,11 @@ source .venv/bin/activate
 if [ ! -f "db.sqlite3" ]; then
     echo "📊 Database not found. Creating database..."
     python manage.py migrate
-    
+
     # Load sample data
     echo "📊 Loading sample data..."
     python manage.py loaddata sample_data.json
-    
+
     echo ""
     echo "⚠️  No superuser created. To access admin, run:"
     echo "   python manage.py createsuperuser"

@@ -65,12 +65,12 @@ if [ ! -f "db.sqlite3" ]; then
     echo "🔧 Setting up database..."
     python manage.py migrate > /dev/null 2>&1
     echo "✓ Database created"
-    
+
     echo ""
     echo "📊 Loading sample data..."
     python manage.py loaddata sample_data.json > /dev/null 2>&1
     echo "✓ Sample data loaded (3 posts, 3 comments)"
-    
+
     echo ""
     echo "👤 Creating superuser..."
     echo "   (You can skip this and create it later with: python manage.py createsuperuser)"

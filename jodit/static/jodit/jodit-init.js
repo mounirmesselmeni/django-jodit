@@ -1,9 +1,9 @@
 /**
  * Jodit Editor Initialization Script for Django
- * 
+ *
  * This script initializes Jodit editor instances for textareas
  * that have been marked with jodit configuration data.
- * 
+ *
  * Supports automatic dark theme detection from:
  * - Django admin dark mode (data-theme="dark")
  * - System prefers-color-scheme
@@ -29,14 +29,14 @@
                 return true;
             }
         }
-        
+
         // Check for dark mode class (some admin themes)
-        if (document.body.classList.contains('theme-dark') || 
+        if (document.body.classList.contains('theme-dark') ||
             document.body.classList.contains('dark-mode') ||
             htmlElement.classList.contains('dark-mode')) {
             return true;
         }
-        
+
         return false;
     }
 
@@ -52,7 +52,7 @@
         // Get configuration from data attribute
         const configData = textarea.getAttribute('data-jodit-config');
         let config = {};
-        
+
         if (configData) {
             try {
                 config = JSON.parse(configData);
@@ -71,10 +71,10 @@
         try {
             const editor = Jodit.make(textarea, config);
             textarea.setAttribute('data-processed', '1');
-            
+
             // Store editor instance for potential future access
             textarea.joditEditor = editor;
-            
+
             // Watch for theme changes (Django admin theme switcher)
             observeThemeChanges(editor, config);
         } catch (e) {

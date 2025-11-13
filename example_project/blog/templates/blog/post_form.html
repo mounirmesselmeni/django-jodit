@@ -11,7 +11,7 @@
             <div class="card-body">
                 <form method="post" novalidate>
                     {% csrf_token %}
-                    
+
                     {% if form.non_field_errors %}
                     <div class="alert alert-danger">
                         {{ form.non_field_errors }}
@@ -73,7 +73,7 @@
                             <div class="text-danger">{{ form.content.errors }}</div>
                         {% endif %}
                         <div class="form-text">
-                            <strong>Full-featured editor</strong> - Use the toolbar above for rich text formatting, 
+                            <strong>Full-featured editor</strong> - Use the toolbar above for rich text formatting,
                             including images, tables, links, and more.
                         </div>
                     </div>
@@ -149,7 +149,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const titleInput = document.getElementById('{{ form.title.id_for_label }}');
         const slugInput = document.getElementById('{{ form.slug.id_for_label }}');
-        
+
         if (titleInput && slugInput) {
             titleInput.addEventListener('input', function() {
                 // Only auto-generate if slug is empty or was auto-generated
@@ -162,7 +162,7 @@
                     slugInput.value = slug;
                 }
             });
-            
+
             slugInput.addEventListener('input', function() {
                 // Mark as manually edited if user types in slug field
                 this.dataset.manuallyEdited = 'true';
