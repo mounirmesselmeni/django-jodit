@@ -374,18 +374,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [Jodit Editor](https://xdsoft.net/jodit/)
 
-## Publishing to PyPI
-
-This project uses GitHub Actions with OpenID Connect (OIDC) trusted publishing for secure, automated releases to PyPI. See [PYPI_PUBLISHING.md](./PYPI_PUBLISHING.md) for detailed setup instructions.
-
-### Quick Release Process
-
-1. Update version in `pyproject.toml`
-2. Commit and push to main branch
-3. GitHub Actions automatically publishes to PyPI
-
-No API tokens needed! 🎉
-
 ## Changelog
 
 ### 0.1.0 (2025-11-13)
