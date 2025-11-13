@@ -24,14 +24,16 @@ jobs:
     - name: Install uv
       uses: astral-sh/setup-uv@v5
       with:
-        python-version: ${{ matrix.python-version }}
         enable-cache: true
         cache-dependency-glob: "uv.lock"
     
+    - name: Set up Python ${{ matrix.python-version }}
+      run: uv python install ${{ matrix.python-version }}
+    
     - name: Install dependencies
       run: |
-        uv pip install --system "Django~=${{ matrix.django-version }}.0"
-        uv pip install --system coverage
+        uv pip install "Django~=${{ matrix.django-version }}.0"
+        uv pip install coverage
     
     - name: Cache pre-commit hooks
       if: matrix.python-version == '3.13' && matrix.django-version == '5.2'
@@ -44,7 +46,7 @@ jobs:
     - name: Install pre-commit
       if: matrix.python-version == '3.13' && matrix.django-version == '5.2'
       run: |
-        uv pip install --system pre-commit
+        uv pip install pre-commit
     
     - name: Run pre-commit
       if: matrix.python-version == '3.13' && matrix.django-version == '5.2'
@@ -89,12 +91,14 @@ jobs:
     - name: Install uv
       uses: astral-sh/setup-uv@v5
       with:
-        python-version: '3.13'
         enable-cache: true
+    
+    - name: Set up Python
+      run: uv python install 3.13
     
     - name: Install dependencies
       run: |
-        uv pip install --system ruff
+        uv pip install ruff
     
     - name: Run ruff check
       run: ruff check .
@@ -117,19 +121,21 @@ jobs:
     - name: Install uv
       uses: astral-sh/setup-uv@v5
       with:
-        python-version: '3.13'
         enable-cache: true
     
+    - name: Set up Python
+      run: uv python install 3.13
+    
     - name: Install build dependencies
-      run: uv pip install --system hatchling
+      run: uv pip install hatchling
     
     - name: Build package
       run: uv build
     
     - name: Check package
       run: |
-        uv pip install --system twine
-        twine check dist/*
+        uv pip install twine
+        uv run twine check dist/*
     
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
