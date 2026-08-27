@@ -376,6 +376,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Changelog
 
+### 0.1.1 (2026-08-27)
+
+- Update dependencies to support Django 6.1 and Python 3.14
+- Drop support for Django < 5.2
+- Upgrade jodit to v4.13.9
+
 ### 0.1.0 (2025-11-13)
 
 - Initial release

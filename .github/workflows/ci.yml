@@ -12,38 +12,50 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write # <-- lets orgoro/coverage comment on the PR
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.11", "3.12", "3.13"]
-        django-version: ["4.2", "5.0", "5.1", "5.2"]
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+        django-version: ["5.2", "6.0", "6.1"]
+        exclude:
+          - python-version: "3.11"
+            django-version: "6.0"
+          - python-version: "3.11"
+            django-version: "6.1"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v10.0.1
         with:
           python-version: ${{ matrix.python-version }}
           enable-cache: true
           cache-dependency-glob: "uv.lock"
 
+      - name: Install dependencies
+        run: |
+          uv sync --all-extras --dev
+
       - name: Install Django
-        run: uv pip install "Django~=${{ matrix.django-version }}.0"
+        run: uv pip install "Django~=${{ matrix.django-version }}"
 
       - name: Install coverage
         run: uv pip install coverage
 
       - name: Cache pre-commit hooks
-        if: matrix.python-version == '3.13' && matrix.django-version == '5.2'
+        if: matrix.python-version == '3.14' && matrix.django-version == '6.1'
         id: pre-commit-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: $HOME/.cache/pre-commit
           key: ${{ runner.os }}-${{ matrix.python-version }}-pre-commit-hooks-${{ hashFiles('**/.pre-commit-config.yaml') }}
 
       - name: Run pre-commit
-        if: matrix.python-version == '3.13' && matrix.django-version == '5.2'
+        if: matrix.python-version == '3.14' && matrix.django-version == '6.1'
         run: uv run pre-commit run --all-files
         env:
           PRE_COMMIT_HOME: $HOME/.cache/pre-commit
@@ -55,8 +67,8 @@ jobs:
           uv run coverage xml
 
       - name: Publish coverage
-        if: matrix.python-version == '3.13' && matrix.django-version == '5.2'
-        uses: orgoro/coverage@v3.2
+        if: matrix.python-version == '3.14' && matrix.django-version == '6.1'
+        uses: orgoro/coverage@v3.3.1
         with:
           coverageFile: coverage.xml
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -73,16 +85,16 @@ jobs:
       id-token: write # OIDC for PyPI publishing
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v10.0.1
         with:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
 
       - name: Set up Python
-        run: uv python install 3.13
+        run: uv python install 3.14
 
       - name: Build package
         run: uv build
